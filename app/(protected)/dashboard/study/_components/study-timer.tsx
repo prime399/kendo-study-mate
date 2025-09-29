@@ -2,17 +2,11 @@ import NumberFlow from "@number-flow/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { DropdownList } from "@/components/ui/dropdown-list"
 import { formatTimeTimer } from "@/lib/utils"
 import { Clock, Pause, Play, RotateCcw } from "lucide-react"
 import { useTopsStore } from "@/store/use-tops-store"
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 
 export default function StudyTimer({
   studyTime,
@@ -38,6 +32,15 @@ export default function StudyTimer({
   const hours = Math.floor(studyTime / 3600)
   const minutes = Math.floor((studyTime % 3600) / 60)
   const seconds = studyTime % 60
+
+  const dropdownOptions = useMemo(
+    () =>
+      studyTypeOptions.map((option) => ({
+        label: option.label,
+        value: option.value,
+      })),
+    [studyTypeOptions],
+  )
 
   useEffect(() => {
     if (!isStudying) return
@@ -79,18 +82,17 @@ export default function StudyTimer({
         <div className="space-y-2 text-center">
           <p className="text-sm font-medium text-muted-foreground">Study type</p>
           <div className="flex justify-center">
-            <Select value={studyType} onValueChange={onStudyTypeChange}>
-              <SelectTrigger className="w-56 capitalize">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {studyTypeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value} className="capitalize">
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <DropdownList
+              className="w-56 capitalize"
+              options={dropdownOptions}
+              value={studyType}
+              onValueChange={(next) => {
+                if (typeof next === "string") {
+                  onStudyTypeChange(next)
+                }
+              }}
+              placeholder="Select type"
+            />
           </div>
         </div>
         <div className="flex justify-center gap-4">
@@ -121,3 +123,4 @@ export default function StudyTimer({
     </Card>
   )
 }
+

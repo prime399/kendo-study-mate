@@ -1,11 +1,11 @@
 "use client"
 import PageTitle from "@/components/page-title"
 import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { TabStrip } from "@/components/ui/tabstrip"
 import { api } from "@/convex/_generated/api"
 import { useMutation, useQuery } from "convex/react"
 import { useQueryState } from "nuqs"
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import { toast } from "sonner"
 import confetti from "canvas-confetti"
 import RecentSessions from "./_components/recent-sessions"
@@ -38,7 +38,7 @@ const triggerNotification = (title: string, body: string) => {
 }
 
 const triggerConfettiSideCannons = () => {
-  const end = Date.now() + 3 * 1000 // 3 seconds
+  const end = Date.now() + 3 * 1000
   const colors = ["#a786ff", "#fd8bbc", "#eca184", "#f8deb1"]
 
   const frame = () => {
@@ -50,7 +50,7 @@ const triggerConfettiSideCannons = () => {
       spread: 55,
       startVelocity: 60,
       origin: { x: 0, y: 0.5 },
-      colors: colors,
+      colors,
     })
     confetti({
       particleCount: 2,
@@ -58,7 +58,7 @@ const triggerConfettiSideCannons = () => {
       spread: 55,
       startVelocity: 60,
       origin: { x: 1, y: 0.5 },
-      colors: colors,
+      colors,
     })
 
     requestAnimationFrame(frame)
@@ -97,10 +97,8 @@ export default function StudyPage() {
   const stats = useQuery(api.study.getStats)
   const userSettings = useQuery(api.study.getSettings)
 
-  const selectedStudyType = (
-    STUDY_TYPE_OPTIONS.find((option) => option.value === studyType) ||
-    STUDY_TYPE_OPTIONS[0]
-  )
+  const selectedStudyType =
+    STUDY_TYPE_OPTIONS.find((option) => option.value === studyType) ?? STUDY_TYPE_OPTIONS[0]
   const studyTypeLabel = selectedStudyType.label
 
   const handleStudyTypeChange = useCallback(
@@ -116,7 +114,6 @@ export default function StudyPage() {
     }
   }, [])
 
-  // Sync user settings from Convex when loaded
   useEffect(() => {
     if (userSettings && userSettings.studyDuration && userSettings.dailyGoal) {
       setStudyDuration(userSettings.studyDuration)
@@ -126,26 +123,21 @@ export default function StudyPage() {
 
   const handleSessionComplete = useCallback(
     (time: number) => {
-      setIsStudying(false)
       completeSession({
         duration: time,
         type: studyType,
         completed: true,
       })
-
-      // Trigger celebration effects
+      setStudyTime(0)
+      setIsStudying(false)
+      triggerNotification("Session complete!", `Nice work finishing ${studyTypeLabel.toLowerCase()} time.`)
       triggerConfettiSideCannons()
-      
-      triggerNotification(
-        `${studyTypeLabel} Session Complete!`,
-        `Great job! You logged ${formatTimeTimer(time)}.`,
-      )
-
-      toast.success(`Great job! ${studyTypeLabel} session complete.`)
-    }, [completeSession, setIsStudying, studyType, studyTypeLabel])
+    },
+    [completeSession, setIsStudying, setStudyTime, studyType, studyTypeLabel],
+  )
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: NodeJS.Timeout | undefined
 
     if (isStudying) {
       interval = setInterval(() => {
@@ -160,14 +152,28 @@ export default function StudyPage() {
       }, 1000)
     }
 
-    return () => clearInterval(interval)
+    return () => {
+      if (interval) clearInterval(interval)
+    }
   }, [handleSessionComplete, isStudying, setStudyTime, studyDuration])
 
-  const handleDailyGoalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newGoal = Math.max(1, Number(e.target.value)) * 60
-    setDailyGoal(newGoal)
-    toast.success(`Daily goal set to ${e.target.value} minutes.`)
-  }
+  const handleDailyGoalChange = useCallback(
+    (minutes: number) => {
+      const sanitized = Math.max(1, minutes)
+      setDailyGoal(sanitized * 60)
+      toast.success(`Daily goal set to ${sanitized} minutes.`)
+    },
+    [setDailyGoal],
+  )
+
+  const handleDurationChange = useCallback(
+    (minutes: number) => {
+      const sanitized = Math.max(1, minutes)
+      setStudyDuration(sanitized * 60)
+      toast.success(`Study duration set to ${sanitized} minutes.`)
+    },
+    [setStudyDuration],
+  )
 
   const handleStartStop = () => {
     if (isStudying) {
@@ -196,7 +202,7 @@ export default function StudyPage() {
     toast.success(`${studyTypeLabel} timer has been reset to 0.`)
   }
 
-  const handleSaveSettings = async () => {
+  const handleSaveSettings = useCallback(async () => {
     try {
       await updateSettings({
         studyDuration,
@@ -206,18 +212,65 @@ export default function StudyPage() {
     } catch (error) {
       toast.error("Failed to save settings.")
     }
-  }
-
-  const handleDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDuration = Math.max(1, Number(e.target.value)) * 60
-    setStudyDuration(newDuration)
-    toast.success(`Study duration set to ${e.target.value} minutes.`)
-  }
+  }, [updateSettings, studyDuration, dailyGoal])
 
   const progress = (studyTime / studyDuration) * 100
 
+  const tabItems = useMemo(
+    () => [
+      {
+        key: "stats",
+        title: "Statistics",
+        content: (
+          <StudyStats
+            studyTime={studyTime}
+            progress={progress}
+            totalStudyTime={stats?.totalStudyTime ?? 0}
+          />
+        ),
+      },
+      {
+        key: "settings",
+        title: "Settings",
+        content: (
+          <StudySettings
+            studyDuration={studyDuration}
+            dailyGoal={dailyGoal}
+            onDurationChange={handleDurationChange}
+            onDailyGoalChange={handleDailyGoalChange}
+            onSave={handleSaveSettings}
+          />
+        ),
+      },
+      {
+        key: "history",
+        title: "History",
+        content: stats?.recentSessions && stats.recentSessions.length > 0 ? (
+          <RecentSessions sessions={stats.recentSessions} />
+        ) : (
+          <Card>
+            <CardContent className="pt-6 text-center text-muted-foreground">
+              No study sessions recorded yet.
+            </CardContent>
+          </Card>
+        ),
+      },
+    ],
+    [
+      stats?.recentSessions,
+      stats?.totalStudyTime,
+      studyTime,
+      progress,
+      studyDuration,
+      dailyGoal,
+      handleDurationChange,
+      handleDailyGoalChange,
+      handleSaveSettings,
+    ],
+  )
+
   return (
-    <div className="">
+    <div>
       <PageTitle title="Study Dashboard" />
       <NotificationPermission />
       <div className="grid gap-6">
@@ -232,44 +285,15 @@ export default function StudyPage() {
           onReset={handleReset}
         />
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="stats">Statistics</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="stats" className="mt-6">
-            <StudyStats
-              studyTime={studyTime}
-              progress={progress}
-              totalStudyTime={stats?.totalStudyTime ?? 0}
-            />
-          </TabsContent>
-
-          <TabsContent value="settings" className="mt-6">
-            <StudySettings
-              studyDuration={studyDuration}
-              dailyGoal={dailyGoal}
-              onDurationChange={handleDurationChange}
-              onDailyGoalChange={handleDailyGoalChange}
-              onSave={handleSaveSettings}
-            />
-          </TabsContent>
-
-          <TabsContent value="history" className="mt-6">
-            {stats?.recentSessions && stats.recentSessions.length > 0 ? (
-              <RecentSessions sessions={stats.recentSessions} />
-            ) : (
-              <Card>
-                <CardContent className="pt-6 text-center text-muted-foreground">
-                  No study sessions recorded yet.
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
-        </Tabs>
+        <TabStrip
+          className="w-full"
+          items={tabItems}
+          value={activeTab}
+          onValueChange={setActiveTab}
+          keepMount
+        />
       </div>
     </div>
   )
 }
+

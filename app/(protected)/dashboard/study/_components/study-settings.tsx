@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card"
 import { Settings, Save, Clock, Target, Info, CheckCircle } from "lucide-react"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { useState, useEffect } from "react"
+import { NumericInput } from "@/components/ui/numeric-input"
+import { useState, useMemo } from "react"
 
 export default function StudySettings({
   studyDuration,
@@ -17,26 +17,25 @@ export default function StudySettings({
 }: {
   studyDuration: number
   dailyGoal: number
-  onDurationChange: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onDailyGoalChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onDurationChange: (minutes: number) => void
+  onDailyGoalChange: (minutes: number) => void
   onSave: () => void
 }) {
   const [isLoading, setIsLoading] = useState(false)
   const [saveStatus, setSaveStatus] = useState<'idle' | 'success' | 'error'>('idle')
-  
+
   const durationMinutes = studyDuration / 60
   const dailyGoalMinutes = dailyGoal / 60
   const dailyGoalHours = Math.floor(dailyGoalMinutes / 60)
-  const remainingMinutes = dailyGoalMinutes % 60
+  const remainingMinutes = Math.round(dailyGoalMinutes) % 60
 
-  // Common duration presets
-  const durationPresets = [15, 25, 30, 45, 60, 90]
-  const goalPresets = [60, 120, 180, 240, 300] // in minutes
+  const durationPresets = useMemo(() => [15, 25, 30, 45, 60, 90], [])
+  const goalPresets = useMemo(() => [60, 120, 180, 240, 300], []) // in minutes
 
   const handleSave = async () => {
     setIsLoading(true)
     setSaveStatus('idle')
-    
+
     try {
       await onSave()
       setSaveStatus('success')
@@ -50,41 +49,35 @@ export default function StudySettings({
   }
 
   const handleDurationSlider = (value: number[]) => {
-    const roundedValue = Math.round(value[0])
-    const event = {
-      target: { value: roundedValue.toString() }
-    } as React.ChangeEvent<HTMLInputElement>
-    onDurationChange(event)
+    onDurationChange(Math.round(value[0]))
   }
 
   const handleGoalSlider = (value: number[]) => {
-    const roundedValue = Math.round(value[0])
-    const event = {
-      target: { value: roundedValue.toString() }
-    } as React.ChangeEvent<HTMLInputElement>
-    onDailyGoalChange(event)
+    onDailyGoalChange(Math.round(value[0]))
   }
 
-  const getDurationRecommendation = () => {
-    if (durationMinutes <= 15) return { text: "Good for quick focus sessions", color: "bg-blue-50 text-blue-700 border-blue-200" }
-    if (durationMinutes <= 30) return { text: "Recommended for most people", color: "bg-emerald-50 text-emerald-700 border-emerald-200" }
-    if (durationMinutes <= 60) return { text: "Great for deep work", color: "bg-purple-50 text-purple-700 border-purple-200" }
+  const durationRec = useMemo(() => {
+    if (durationMinutes <= 15)
+      return { text: "Good for quick focus sessions", color: "bg-blue-50 text-blue-700 border-blue-200" }
+    if (durationMinutes <= 30)
+      return { text: "Recommended for most people", color: "bg-emerald-50 text-emerald-700 border-emerald-200" }
+    if (durationMinutes <= 60)
+      return { text: "Great for deep work", color: "bg-purple-50 text-purple-700 border-purple-200" }
     return { text: "For advanced practitioners", color: "bg-orange-50 text-orange-700 border-orange-200" }
-  }
+  }, [durationMinutes])
 
-  const getGoalRecommendation = () => {
-    if (dailyGoalMinutes <= 60) return { text: "Getting started", color: "bg-blue-50 text-blue-700 border-blue-200" }
-    if (dailyGoalMinutes <= 120) return { text: "Good daily habit", color: "bg-emerald-50 text-emerald-700 border-emerald-200" }
-    if (dailyGoalMinutes <= 240) return { text: "Ambitious goal", color: "bg-purple-50 text-purple-700 border-purple-200" }
+  const goalRec = useMemo(() => {
+    if (dailyGoalMinutes <= 60)
+      return { text: "Getting started", color: "bg-blue-50 text-blue-700 border-blue-200" }
+    if (dailyGoalMinutes <= 120)
+      return { text: "Good daily habit", color: "bg-emerald-50 text-emerald-700 border-emerald-200" }
+    if (dailyGoalMinutes <= 240)
+      return { text: "Ambitious goal", color: "bg-purple-50 text-purple-700 border-purple-200" }
     return { text: "Intensive study", color: "bg-orange-50 text-orange-700 border-orange-200" }
-  }
-
-  const durationRec = getDurationRecommendation()
-  const goalRec = getGoalRecommendation()
+  }, [dailyGoalMinutes])
 
   return (
     <div className="space-y-6">
-      {/* Study Duration Settings */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center text-lg">
@@ -105,7 +98,7 @@ export default function StudySettings({
                 {durationRec.text}
               </Badge>
             </div>
-            
+
             <div className="space-y-4">
               <div className="px-3">
                 <Slider
@@ -117,31 +110,36 @@ export default function StudySettings({
                   className="w-full"
                 />
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <Input
+                <NumericInput
                   id="study-duration"
-                  type="number"
                   value={Math.round(durationMinutes)}
-                  onChange={onDurationChange}
                   min={5}
                   max={120}
-                  className="text-lg font-medium w-24"
+                  step={5}
+                  format="n0"
+                  onValueChange={(next) => {
+                    if (typeof next === "number") {
+                      onDurationChange(next)
+                    }
+                  }}
+                  className="w-28"
                 />
                 <span className="text-sm text-muted-foreground">minutes</span>
               </div>
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-medium text-muted-foreground">Quick presets:</p>
+              <p className="text-xs font-medium text-muted-foreground">Popular presets:</p>
               <div className="flex flex-wrap gap-2">
                 {durationPresets.map((preset) => (
                   <Button
                     key={preset}
                     variant={Math.round(durationMinutes) === preset ? "secondary" : "ghost"}
                     size="sm"
-                    onClick={() => handleDurationSlider([preset])}
-                    className="text-xs border border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
+                    onClick={() => onDurationChange(preset)}
+                    className="text-xs"
                   >
                     {preset}m
                   </Button>
@@ -152,12 +150,11 @@ export default function StudySettings({
         </CardContent>
       </Card>
 
-      {/* Daily Goal Settings */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center text-lg">
             <Target className="mr-2 h-5 w-5" />
-            Daily Study Goal
+            Daily Goal
           </CardTitle>
           <CardDescription>
             Set your target daily study time to track progress and build consistency
@@ -185,16 +182,21 @@ export default function StudySettings({
                   className="w-full"
                 />
               </div>
-              
+
               <div className="flex items-center gap-2">
-                <Input
+                <NumericInput
                   id="daily-goal"
-                  type="number"
                   value={Math.round(dailyGoalMinutes)}
-                  onChange={onDailyGoalChange}
                   min={15}
                   max={480}
-                  className="text-lg font-medium w-24"
+                  step={15}
+                  format="n0"
+                  onValueChange={(next) => {
+                    if (typeof next === "number") {
+                      onDailyGoalChange(next)
+                    }
+                  }}
+                  className="w-28"
                 />
                 <span className="text-sm text-muted-foreground">
                   minutes ({dailyGoalHours}h {remainingMinutes}m)
@@ -210,10 +212,10 @@ export default function StudySettings({
                     key={preset}
                     variant={Math.round(dailyGoalMinutes) === preset ? "secondary" : "ghost"}
                     size="sm"
-                    onClick={() => handleGoalSlider([preset])}
-                    className="text-xs border border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
+                    onClick={() => onDailyGoalChange(preset)}
+                    className="text-xs"
                   >
-                    {preset >= 60 ? `${preset/60}h` : `${preset}m`}
+                    {preset >= 60 ? `${preset / 60}h` : `${preset}m`}
                   </Button>
                 ))}
               </div>
@@ -222,7 +224,6 @@ export default function StudySettings({
         </CardContent>
       </Card>
 
-      {/* Settings Summary & Save */}
       <Card>
         <CardHeader className="pb-4">
           <CardTitle className="flex items-center text-lg">
@@ -238,32 +239,34 @@ export default function StudySettings({
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground">Daily Goal</p>
-              <p className="font-medium">{Math.floor(Math.round(dailyGoalMinutes) / 60)}h {Math.round(dailyGoalMinutes) % 60}m</p>
+              <p className="font-medium">{dailyGoalHours}h {remainingMinutes}m</p>
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground">Sessions per day</p>
-              <p className="font-medium">~{Math.ceil(Math.round(dailyGoalMinutes) / Math.round(durationMinutes))} sessions</p>
+              <p className="font-medium">
+                ~{Math.max(1, Math.ceil(Math.round(dailyGoalMinutes) / Math.max(Math.round(durationMinutes), 1)))} sessions
+              </p>
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground">Weekly goal</p>
-              <p className="font-medium">{Math.round((Math.round(dailyGoalMinutes) * 7) / 60 * 10) / 10}h</p>
+              <p className="font-medium">{Math.round((dailyGoalMinutes * 7) / 60 * 10) / 10}h</p>
             </div>
           </div>
 
           <Separator />
-          
-          <div className="flex items-center gap-2 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800">
-            <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
+
+          <div className="flex items-center gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
+            <Info className="h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
             <p className="text-xs text-blue-700 dark:text-blue-300">
               Settings will be saved to your account and synced across all devices. Changes take effect immediately.
             </p>
           </div>
 
-          <Button 
-            className="w-full bg-white text-gray-900 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500" 
-            onClick={handleSave} 
+          <Button
+            className="w-full"
+            onClick={handleSave}
             disabled={isLoading}
-            variant="ghost"
+            variant={saveStatus === 'success' ? 'default' : 'outline'}
           >
             {isLoading ? (
               <>
@@ -287,3 +290,4 @@ export default function StudySettings({
     </div>
   )
 }
+

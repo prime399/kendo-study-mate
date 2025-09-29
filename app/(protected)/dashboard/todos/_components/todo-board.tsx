@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import { useCallback, useEffect, useRef, useState } from "react"
 import { api } from "@/convex/_generated/api"
@@ -11,7 +11,8 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DropdownList } from "@/components/ui/dropdown-list"
+import { DatePickerField } from "@/components/ui/date-picker"
 import {
   Dialog,
   DialogContent,
@@ -601,44 +602,47 @@ function TaskDialog({ open, onOpenChange, mode, state, onStateChange, onSubmit, 
           <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             <div className="space-y-3">
               <Label className="text-sm font-medium">Status</Label>
-              <Select value={state.status} onValueChange={(value: StatusId) => handleChange("status", value)}>
-                <SelectTrigger className="h-11">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {STATUS_CONFIG.map((column) => (
-                    <SelectItem key={column.id} value={column.id} className="capitalize">
-                      {column.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <DropdownList
+                className="w-full"
+                options={STATUS_CONFIG.map((column) => ({
+                  label: column.label,
+                  value: column.id,
+                }))}
+                value={state.status}
+                onValueChange={(value) => {
+                  if (value) {
+                    handleChange("status", value as StatusId)
+                  }
+                }}
+                placeholder="Select status"
+              />
             </div>
             <div className="space-y-3">
               <Label className="text-sm font-medium">Priority</Label>
-              <Select
+              <DropdownList
+                className="w-full"
+                options={(Object.keys(PRIORITY_CONFIG) as PriorityId[]).map((priority) => ({
+                  label: PRIORITY_CONFIG[priority].label,
+                  value: priority,
+                }))}
                 value={state.priority}
-                onValueChange={(value: PriorityId) => handleChange("priority", value)}
-              >
-                <SelectTrigger className="h-11">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {(Object.keys(PRIORITY_CONFIG) as PriorityId[]).map((priority) => (
-                    <SelectItem key={priority} value={priority} className="capitalize">
-                      {PRIORITY_CONFIG[priority].label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onValueChange={(value) => {
+                  if (value) {
+                    handleChange("priority", value as PriorityId)
+                  }
+                }}
+                placeholder="Select priority"
+              />
             </div>
             <div className="space-y-3">
               <Label htmlFor="task-due" className="text-sm font-medium">Due date</Label>
-              <Input
-                type="date"
+              <DatePickerField
                 id="task-due"
-                value={state.dueDate}
-                onChange={(event) => handleChange("dueDate", event.target.value)}
+                value={state.dueDate ? new Date(`${state.dueDate}T00:00:00`) : null}
+                onValueChange={(date) =>
+                  handleChange("dueDate", date ? date.toISOString().slice(0, 10) : "")
+                }
+                placeholder="Pick a date"
                 className="h-11"
               />
             </div>
