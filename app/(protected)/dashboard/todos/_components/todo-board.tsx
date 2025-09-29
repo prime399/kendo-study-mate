@@ -48,27 +48,27 @@ const STATUS_CONFIG = [
     label: "Backlog",
     hint: "Ideas and tasks waiting for prioritisation",
     accent:
-      "border-sky-200/70 bg-sky-50/90 text-sky-900 dark:border-sky-500/40 dark:bg-sky-500/15 dark:text-sky-100",
+      "border-blue-300 bg-blue-100 text-blue-800 shadow-sm dark:border-blue-600 dark:bg-blue-900/40 dark:text-blue-200",
     headerClass:
-      "from-sky-500/10 via-sky-500/5 to-transparent dark:from-sky-500/20 dark:via-sky-500/10 dark:to-transparent",
+      "from-blue-50 via-blue-100/50 to-blue-50/30 dark:from-blue-900/30 dark:via-blue-800/20 dark:to-blue-900/10",
   },
   {
     id: "in_progress",
     label: "In Progress",
     hint: "Currently being worked on",
     accent:
-      "border-indigo-200/70 bg-indigo-50/90 text-indigo-900 dark:border-indigo-500/40 dark:bg-indigo-500/15 dark:text-indigo-100",
+      "border-indigo-300 bg-indigo-100 text-indigo-800 shadow-sm dark:border-indigo-600 dark:bg-indigo-900/40 dark:text-indigo-200",
     headerClass:
-      "from-indigo-500/10 via-indigo-500/5 to-transparent dark:from-indigo-500/20 dark:via-indigo-500/10 dark:to-transparent",
+      "from-indigo-50 via-indigo-100/50 to-indigo-50/30 dark:from-indigo-900/30 dark:via-indigo-800/20 dark:to-indigo-900/10",
   },
   {
     id: "done",
     label: "Done",
     hint: "Completed tasks",
     accent:
-      "border-emerald-200/70 bg-emerald-50/90 text-emerald-900 dark:border-emerald-500/40 dark:bg-emerald-500/15 dark:text-emerald-100",
+      "border-emerald-300 bg-emerald-100 text-emerald-800 shadow-sm dark:border-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-200",
     headerClass:
-      "from-emerald-500/10 via-emerald-500/5 to-transparent dark:from-emerald-500/20 dark:via-emerald-500/10 dark:to-transparent",
+      "from-emerald-50 via-emerald-100/50 to-emerald-50/30 dark:from-emerald-900/30 dark:via-emerald-800/20 dark:to-emerald-900/10",
   },
 ] as const
 
@@ -303,21 +303,25 @@ export function TodoBoard() {
   const isLoading = !boardResponse
 
   return (
-    <div className="space-y-4 sm:space-y-6 lg:space-y-8">
-      <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
+    <div className="space-y-6 sm:space-y-8 lg:space-y-10">
+      <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+        <div className="space-y-2">
           <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">To-Do Board</h2>
-          <p className="mt-1 max-w-2xl text-sm text-muted-foreground sm:text-base">
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground sm:text-base leading-relaxed">
             Plan your study focus, drag tasks between columns, and keep your goals on track.
           </p>
         </div>
-        <Button onClick={() => openCreateDialog()} className="self-start sm:self-auto rounded-full bg-primary/90 px-4 sm:px-5 py-2 shadow-sm transition hover:bg-primary/80 hover:shadow-md">
+        <Button 
+          onClick={() => openCreateDialog()} 
+          variant="ghost"
+          className="self-start sm:self-auto rounded-full bg-white text-gray-700 border-2 border-gray-200 px-4 sm:px-6 py-2.5 shadow-sm transition-all hover:bg-gray-50 hover:border-gray-300 hover:shadow-md dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500"
+        >
           <Plus className="mr-2 h-4 w-4" />
           New Task
         </Button>
       </div>
 
-      <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3 md:gap-6">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3 md:gap-8">
         <SummaryCard
           title="Total tasks"
           value={totals.all}
@@ -333,40 +337,40 @@ export function TodoBoard() {
         <SummaryCard title="Completed" value={totals.done} icon={CheckCircle2} tone="emerald" />
       </div>
 
-      <div className="space-y-4 sm:space-y-6">
+      <div className="space-y-6 sm:space-y-8">
         <Kanban
           value={board}
           onValueChange={handleBoardChange}
           getItemValue={(item) => item._id}
           onMove={handleMove}
-          className="space-y-4 sm:space-y-6"
+          className="space-y-6 sm:space-y-8"
         >
-          <KanbanBoard className="grid gap-4 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-5 md:gap-6">
+          <KanbanBoard className="grid gap-6 grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 sm:gap-6 md:gap-8 lg:gap-10">
             {STATUS_CONFIG.map((column) => {
               const tasks = board[column.id]
               return (
                 <KanbanColumn key={column.id} value={column.id} disabled className="flex flex-col">
-                  <Card className={cn("group flex h-full flex-col overflow-hidden border border-border/60 bg-card shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-lg")}>
-                    <CardHeader className={cn("space-y-3 border-b border-border/60 pb-4 text-foreground", "bg-gradient-to-br", column.headerClass)}>
-                      <div className="flex items-center justify-between gap-2">
-                        <div>
+                  <Card className={cn("group flex h-full flex-col overflow-hidden border-2 border-gray-200 bg-white shadow-md transition-all duration-300 hover:border-blue-300 hover:shadow-xl dark:border-gray-700 dark:bg-gray-900 dark:hover:border-blue-600")}>
+                    <CardHeader className={cn("space-y-4 border-b-2 border-gray-200 pb-6 text-foreground dark:border-gray-700", "bg-gradient-to-br", column.headerClass)}>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="space-y-1">
                           <CardTitle className="text-xl font-semibold text-foreground">
                             {column.label}
                           </CardTitle>
-                          <p className="text-sm text-muted-foreground">{column.hint}</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed">{column.hint}</p>
                         </div>
-                        <Badge variant="outline" className="rounded-lg border border-primary/30 bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary shadow-sm dark:border-primary/40 dark:bg-primary/15 dark:text-primary-foreground">
+                        <Badge variant="outline" className="rounded-lg border border-blue-300 bg-blue-100 px-3 py-1.5 text-sm font-semibold text-blue-800 shadow-sm dark:border-blue-600 dark:bg-blue-900/40 dark:text-blue-200">
                           {tasks.length}
                         </Badge>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-4">
                         <span className={cn("inline-flex items-center gap-1 rounded-lg border px-3 py-2 text-sm font-semibold text-foreground shadow-sm", column.accent)}>
                           {column.label}
                         </span>
                         <Button
-                          variant="outline"
+                          variant="ghost"
                           size="sm"
-                          className="h-9 px-4 border-border/70 text-foreground transition-colors hover:border-primary/40 hover:bg-primary/10 hover:text-primary"
+                          className="h-9 px-4 bg-white text-gray-600 border border-gray-200 transition-all hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:border-gray-500 dark:hover:text-gray-100"
                           onClick={() => openCreateDialog(column.id)}
                         >
                           <Plus className="mr-1.5 h-4 w-4" />
@@ -374,14 +378,14 @@ export function TodoBoard() {
                         </Button>
                       </div>
                     </CardHeader>
-                    <CardContent className="flex h-full flex-col gap-3 sm:gap-4 bg-muted pt-3 sm:pt-4">
-                      <KanbanColumnContent value={column.id} className="min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] flex flex-1 flex-col gap-3 sm:gap-4 rounded-xl border border-dashed border-transparent bg-card p-2 transition-colors duration-300">
+                    <CardContent className="flex h-full flex-col gap-4 sm:gap-6 bg-gray-50 dark:bg-gray-800/50 pt-4 sm:pt-6">
+                      <KanbanColumnContent value={column.id} className="min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] flex flex-1 flex-col gap-4 sm:gap-5 rounded-xl border border-dashed border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-900 p-3 sm:p-4 transition-colors duration-300">
                         {isLoading && tasks.length === 0 ? (
-                          <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border/60 bg-background p-4 sm:p-6 lg:p-8 text-sm font-medium text-muted-foreground">
+                          <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 text-sm font-medium text-gray-600 dark:text-gray-400">
                             Loading tasks...
                           </div>
                         ) : tasks.length === 0 ? (
-                          <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-border/60 bg-background p-4 sm:p-6 lg:p-8 text-center text-sm font-medium text-muted-foreground">
+                          <div className="flex flex-1 items-center justify-center rounded-xl border border-dashed border-gray-300 bg-gray-50 dark:border-gray-600 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 text-center text-sm font-medium text-gray-600 dark:text-gray-400">
                             {column.id === "backlog"
                               ? "Drop ideas here to work on later."
                               : "Nothing here yet. Move a task over when ready."}
@@ -446,21 +450,21 @@ interface SummaryCardProps {
 
 function SummaryCard({ title, value, icon: Icon, tone }: SummaryCardProps) {
   const toneStyles: Record<SummaryCardProps["tone"], string> = {
-    primary: "bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-foreground",
-    amber: "bg-amber-100 text-amber-900 dark:bg-amber-500/20 dark:text-amber-100",
-    emerald: "bg-emerald-100 text-emerald-900 dark:bg-emerald-500/20 dark:text-emerald-100",
-    neutral: "bg-muted text-muted-foreground dark:bg-muted/50 dark:text-muted-foreground",
+    primary: "bg-blue-100 text-blue-700 border border-blue-200 shadow-sm dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800",
+    amber: "bg-amber-100 text-amber-700 border border-amber-200 shadow-sm dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800",
+    emerald: "bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-sm dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800",
+    neutral: "bg-gray-100 text-gray-700 border border-gray-200 shadow-sm dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700",
   }
 
   return (
-    <Card className="border border-border/60 transition-all duration-300 hover:border-primary/40 hover:shadow-md">
-      <CardContent className="flex items-center gap-4 py-6">
-        <div className={cn("flex h-12 w-12 items-center justify-center rounded-lg shadow-sm", toneStyles[tone])}>
-          <Icon className="h-5 w-5" />
+    <Card className="border border-border/60 bg-white dark:bg-gray-900 transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:-translate-y-0.5">
+      <CardContent className="flex items-center gap-5 py-7 px-6">
+        <div className={cn("flex h-14 w-14 items-center justify-center rounded-xl shadow-md transition-all duration-200 hover:scale-105", toneStyles[tone])}>
+          <Icon className="h-6 w-6" />
         </div>
-        <div>
-          <p className="text-sm text-muted-foreground">{title}</p>
-          <p className="text-2xl font-semibold text-foreground">{value}</p>
+        <div className="flex-1 space-y-1">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wide">{title}</p>
+          <p className="text-3xl font-bold text-gray-900 dark:text-gray-100">{value}</p>
         </div>
       </CardContent>
     </Card>
@@ -481,13 +485,13 @@ function TaskCard({ task, onEdit, onDelete, isOverlay }: TaskCardProps) {
   return (
     <div
       className={cn(
-        "group rounded-xl border border-border/60 bg-card p-3 sm:p-4 lg:p-5 shadow-sm transition-all duration-300",
-        !isOverlay && "hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-xl",
-        isOverlay && "border-primary/40 shadow-2xl rotate-3 scale-105 backdrop-blur"
+        "group rounded-xl border-2 border-gray-200 bg-white dark:border-gray-600 dark:bg-gray-800 p-3 sm:p-4 lg:p-5 shadow-md transition-all duration-300",
+        !isOverlay && "hover:-translate-y-1.5 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-100/50 dark:hover:border-blue-500 dark:hover:shadow-blue-900/20",
+        isOverlay && "border-blue-400 shadow-2xl rotate-3 scale-105 backdrop-blur"
       )}
     >
-      <div className="flex items-start justify-between gap-2 sm:gap-3">
-        <div className="flex-1 space-y-2 sm:space-y-3">
+      <div className="flex items-start justify-between gap-3 sm:gap-4">
+        <div className="flex-1 space-y-3 sm:space-y-4">
           <p className="line-clamp-2 text-base sm:text-lg font-semibold leading-tight text-foreground">{task.title}</p>
           {task.description && (
             <p className="line-clamp-3 text-sm text-muted-foreground leading-relaxed">{task.description}</p>
@@ -526,9 +530,9 @@ function TaskCard({ task, onEdit, onDelete, isOverlay }: TaskCardProps) {
         )}
       </div>
 
-      <Separator className="my-4 bg-border/60" />
+      <Separator className="my-5 bg-border/60" />
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <Badge variant="outline" className={cn("rounded-lg px-3 py-1 text-sm font-medium", priority.className)}>
           {priority.label} priority
         </Badge>
@@ -570,33 +574,35 @@ function TaskDialog({ open, onOpenChange, mode, state, onStateChange, onSubmit, 
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-2">
-          <div className="space-y-2">
-            <Label htmlFor="task-title">Title</Label>
+        <div className="space-y-6 py-4">
+          <div className="space-y-3">
+            <Label htmlFor="task-title" className="text-sm font-medium">Title</Label>
             <Input
               id="task-title"
               placeholder="Quick summary"
               value={state.title}
               onChange={(event) => handleChange("title", event.target.value)}
+              className="h-11"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="task-description">Description</Label>
+          <div className="space-y-3">
+            <Label htmlFor="task-description" className="text-sm font-medium">Description</Label>
             <Textarea
               id="task-description"
               placeholder="Add context, resources, or acceptance criteria"
               value={state.description}
               onChange={(event) => handleChange("description", event.target.value)}
               rows={4}
+              className="min-h-[100px]"
             />
           </div>
 
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-            <div className="space-y-2">
-              <Label>Status</Label>
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Status</Label>
               <Select value={state.status} onValueChange={(value: StatusId) => handleChange("status", value)}>
-                <SelectTrigger>
+                <SelectTrigger className="h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -608,13 +614,13 @@ function TaskDialog({ open, onOpenChange, mode, state, onStateChange, onSubmit, 
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Priority</Label>
+            <div className="space-y-3">
+              <Label className="text-sm font-medium">Priority</Label>
               <Select
                 value={state.priority}
                 onValueChange={(value: PriorityId) => handleChange("priority", value)}
               >
-                <SelectTrigger>
+                <SelectTrigger className="h-11">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -626,23 +632,34 @@ function TaskDialog({ open, onOpenChange, mode, state, onStateChange, onSubmit, 
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="task-due">Due date</Label>
+            <div className="space-y-3">
+              <Label htmlFor="task-due" className="text-sm font-medium">Due date</Label>
               <Input
                 type="date"
                 id="task-due"
                 value={state.dueDate}
                 onChange={(event) => handleChange("dueDate", event.target.value)}
+                className="h-11"
               />
             </div>
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+        <DialogFooter className="gap-3 pt-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => onOpenChange(false)} 
+            disabled={isSubmitting}
+            className="bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200 hover:border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 px-6 py-2.5"
+          >
             Cancel
           </Button>
-          <Button onClick={onSubmit} disabled={isSubmitting}>
+          <Button 
+            onClick={onSubmit} 
+            disabled={isSubmitting}
+            variant="ghost"
+            className="bg-white text-gray-800 border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500 px-6 py-2.5"
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
