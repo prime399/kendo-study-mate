@@ -14,26 +14,26 @@ import { cn } from "@/lib/utils"
 const placeholderButton = typeof document !== "undefined" ? document.createElement("button") : undefined
 
 const buttonVariants = cva(
-  "k-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-60 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "k-button inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow-sm",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+          "bg-blue-600 text-white shadow-md hover:bg-blue-700 hover:shadow-lg active:scale-95 dark:bg-blue-600 dark:hover:bg-blue-700",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+          "bg-red-600 text-white shadow-md hover:bg-red-700 hover:shadow-lg active:scale-95 dark:bg-red-600 dark:hover:bg-red-700",
         outline:
-          "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+          "border-2 border-blue-200 bg-transparent text-blue-700 hover:bg-blue-50 hover:border-blue-300 active:scale-95 dark:border-blue-400/50 dark:text-blue-400 dark:hover:bg-blue-950/20 dark:hover:border-blue-400",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-emerald-100 text-emerald-800 hover:bg-emerald-200 hover:shadow-md active:scale-95 dark:bg-emerald-900/30 dark:text-emerald-300 dark:hover:bg-emerald-900/50",
+        ghost: "text-gray-700 hover:bg-gray-100 hover:text-gray-900 active:scale-95 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100",
+        link: "text-blue-600 underline-offset-4 hover:underline hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        default: "h-10 px-6 py-2.5 text-sm",
+        sm: "h-8 px-4 py-1.5 text-xs font-medium",
+        lg: "h-12 px-8 py-3 text-base font-semibold",
+        icon: "h-10 w-10 p-0",
       },
     },
     defaultVariants: {
@@ -56,12 +56,12 @@ const kendoFillMode: Record<ButtonVariant, KendoButtonProps["fillMode"] | undefi
 }
 
 const kendoThemeColor: Record<ButtonVariant, KendoButtonProps["themeColor"] | undefined> = {
-  default: "primary",
+  default: "info",
   destructive: "error",
-  outline: "base",
-  secondary: "secondary",
+  outline: "info",
+  secondary: "success",
   ghost: "base",
-  link: "primary",
+  link: "info",
 }
 
 const kendoSize: Record<ButtonSize, KendoButtonProps["size"] | undefined> = {

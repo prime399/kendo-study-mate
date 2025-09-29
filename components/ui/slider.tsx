@@ -112,7 +112,7 @@ const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
         max={max}
         step={step}
         className={cn(
-          "k-slider w-full [&_.k-slider-track]:!h-1.5 [&_.k-draghandle]:!h-4 [&_.k-draghandle]:!w-4",
+          "k-slider w-full py-2 [&_.k-slider-track]:!h-2 [&_.k-slider-track]:!bg-gray-200 [&_.k-slider-track]:!rounded-full [&_.k-slider-selection]:!bg-blue-500 [&_.k-slider-selection]:!rounded-full [&_.k-draghandle]:!h-5 [&_.k-draghandle]:!w-5 [&_.k-draghandle]:!bg-white [&_.k-draghandle]:!border-2 [&_.k-draghandle]:!border-blue-500 [&_.k-draghandle]:!rounded-full [&_.k-draghandle]:!shadow-md [&_.k-draghandle]:hover:!scale-110 [&_.k-draghandle]:!transition-all [&_.k-draghandle]:!duration-200 dark:[&_.k-slider-track]:!bg-gray-700 dark:[&_.k-slider-selection]:!bg-blue-400 dark:[&_.k-draghandle]:!border-blue-400",
           className,
         )}
         value={isControlled ? value?.[0] : internalValue}

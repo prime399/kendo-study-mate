@@ -50,15 +50,17 @@ export default function StudySettings({
   }
 
   const handleDurationSlider = (value: number[]) => {
+    const roundedValue = Math.round(value[0])
     const event = {
-      target: { value: value[0].toString() }
+      target: { value: roundedValue.toString() }
     } as React.ChangeEvent<HTMLInputElement>
     onDurationChange(event)
   }
 
   const handleGoalSlider = (value: number[]) => {
+    const roundedValue = Math.round(value[0])
     const event = {
-      target: { value: value[0].toString() }
+      target: { value: roundedValue.toString() }
     } as React.ChangeEvent<HTMLInputElement>
     onDailyGoalChange(event)
   }
@@ -107,7 +109,7 @@ export default function StudySettings({
             <div className="space-y-4">
               <div className="px-3">
                 <Slider
-                  value={[durationMinutes]}
+                  value={[Math.round(durationMinutes)]}
                   onValueChange={handleDurationSlider}
                   max={120}
                   min={5}
@@ -120,7 +122,7 @@ export default function StudySettings({
                 <Input
                   id="study-duration"
                   type="number"
-                  value={durationMinutes}
+                  value={Math.round(durationMinutes)}
                   onChange={onDurationChange}
                   min={5}
                   max={120}
@@ -136,10 +138,10 @@ export default function StudySettings({
                 {durationPresets.map((preset) => (
                   <Button
                     key={preset}
-                    variant={durationMinutes === preset ? "default" : "outline"}
+                    variant={Math.round(durationMinutes) === preset ? "secondary" : "ghost"}
                     size="sm"
                     onClick={() => handleDurationSlider([preset])}
-                    className="text-xs"
+                    className="text-xs border border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
                   >
                     {preset}m
                   </Button>
@@ -175,7 +177,7 @@ export default function StudySettings({
             <div className="space-y-4">
               <div className="px-3">
                 <Slider
-                  value={[dailyGoalMinutes]}
+                  value={[Math.round(dailyGoalMinutes)]}
                   onValueChange={handleGoalSlider}
                   max={480}
                   min={15}
@@ -188,7 +190,7 @@ export default function StudySettings({
                 <Input
                   id="daily-goal"
                   type="number"
-                  value={dailyGoalMinutes}
+                  value={Math.round(dailyGoalMinutes)}
                   onChange={onDailyGoalChange}
                   min={15}
                   max={480}
@@ -206,10 +208,10 @@ export default function StudySettings({
                 {goalPresets.map((preset) => (
                   <Button
                     key={preset}
-                    variant={dailyGoalMinutes === preset ? "default" : "outline"}
+                    variant={Math.round(dailyGoalMinutes) === preset ? "secondary" : "ghost"}
                     size="sm"
                     onClick={() => handleGoalSlider([preset])}
-                    className="text-xs"
+                    className="text-xs border border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600"
                   >
                     {preset >= 60 ? `${preset/60}h` : `${preset}m`}
                   </Button>
@@ -232,19 +234,19 @@ export default function StudySettings({
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="space-y-1">
               <p className="text-muted-foreground">Session Duration</p>
-              <p className="font-medium">{durationMinutes} minutes</p>
+              <p className="font-medium">{Math.round(durationMinutes)} minutes</p>
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground">Daily Goal</p>
-              <p className="font-medium">{dailyGoalHours}h {remainingMinutes}m</p>
+              <p className="font-medium">{Math.floor(Math.round(dailyGoalMinutes) / 60)}h {Math.round(dailyGoalMinutes) % 60}m</p>
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground">Sessions per day</p>
-              <p className="font-medium">~{Math.ceil(dailyGoalMinutes / durationMinutes)} sessions</p>
+              <p className="font-medium">~{Math.ceil(Math.round(dailyGoalMinutes) / Math.round(durationMinutes))} sessions</p>
             </div>
             <div className="space-y-1">
               <p className="text-muted-foreground">Weekly goal</p>
-              <p className="font-medium">{Math.round((dailyGoalMinutes * 7) / 60 * 10) / 10}h</p>
+              <p className="font-medium">{Math.round((Math.round(dailyGoalMinutes) * 7) / 60 * 10) / 10}h</p>
             </div>
           </div>
 
@@ -258,10 +260,10 @@ export default function StudySettings({
           </div>
 
           <Button 
-            className="w-full" 
+            className="w-full bg-white text-gray-900 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500" 
             onClick={handleSave} 
             disabled={isLoading}
-            variant={saveStatus === 'success' ? 'default' : 'outline'}
+            variant="ghost"
           >
             {isLoading ? (
               <>
