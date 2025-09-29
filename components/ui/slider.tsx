@@ -1,28 +1,129 @@
 "use client"
 
 import * as React from "react"
-import * as SliderPrimitive from "@radix-ui/react-slider"
+import {
+  Slider as KendoSlider,
+  type SliderBlurEvent,
+  type SliderChangeEvent,
+  type SliderHandle,
+  type SliderProps as KendoSliderProps,
+} from "@progress/kendo-react-inputs"
 
 import { cn } from "@/lib/utils"
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SliderPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    )}
-    {...props}
-  >
-    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20">
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
-    </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
-  </SliderPrimitive.Root>
-))
-Slider.displayName = SliderPrimitive.Root.displayName
+export interface SliderProps
+  extends Omit<
+    KendoSliderProps,
+    "className" | "value" | "defaultValue" | "onChange" | "onBlur" | "orientation"
+  > {
+  className?: string
+  value?: number[]
+  defaultValue?: number[]
+  onValueChange?: (value: number[]) => void
+  onValueCommit?: (value: number[]) => void
+  orientation?: "horizontal" | "vertical"
+}
+
+const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
+  (
+    {
+      className,
+      value,
+      defaultValue,
+      onValueChange,
+      onValueCommit,
+      orientation = "horizontal",
+      onChange,
+      onBlur,
+      min,
+      max,
+      step,
+      disabled,
+      ...rest
+    },
+    ref,
+  ) => {
+    const isControlled = Array.isArray(value)
+    const initialValue = React.useMemo(() => {
+      if (isControlled && value && typeof value[0] === "number") {
+        return value[0]
+      }
+      if (defaultValue && typeof defaultValue[0] === "number") {
+        return defaultValue[0]
+      }
+      if (typeof min === "number") {
+        return min
+      }
+      return 0
+    }, [defaultValue, isControlled, min, value])
+
+    const [internalValue, setInternalValue] = React.useState<number>(initialValue)
+
+    React.useEffect(() => {
+      if (isControlled && value && typeof value[0] === "number") {
+        setInternalValue(value[0])
+      }
+    }, [isControlled, value])
+
+    const kendoRef = React.useRef<SliderHandle | null>(null)
+    React.useImperativeHandle(ref, () => kendoRef.current?.element ?? null)
+
+    const emitValueChange = React.useCallback(
+      (next: number) => {
+        onValueChange?.([next])
+      },
+      [onValueChange],
+    )
+
+    const emitValueCommit = React.useCallback(
+      (next: number) => {
+        onValueCommit?.([next])
+      },
+      [onValueCommit],
+    )
+
+    const handleChange = React.useCallback(
+      (event: SliderChangeEvent) => {
+        const nextValue = event.value ?? 0
+        if (!isControlled) {
+          setInternalValue(nextValue)
+        }
+        emitValueChange(nextValue)
+        onChange?.(event)
+      },
+      [emitValueChange, isControlled, onChange],
+    )
+
+    const handleBlur = React.useCallback(
+      (event: SliderBlurEvent) => {
+        const nextValue = event.value ?? (isControlled && value ? value[0] ?? 0 : internalValue)
+        emitValueCommit(nextValue)
+        onBlur?.(event)
+      },
+      [emitValueCommit, internalValue, isControlled, onBlur, value],
+    )
+
+    return (
+      <KendoSlider
+        {...rest}
+        ref={kendoRef}
+        disabled={disabled}
+        min={min}
+        max={max}
+        step={step}
+        className={cn(
+          "k-slider w-full [&_.k-slider-track]:!h-1.5 [&_.k-draghandle]:!h-4 [&_.k-draghandle]:!w-4",
+          className,
+        )}
+        value={isControlled ? value?.[0] : internalValue}
+        defaultValue={defaultValue ? defaultValue[0] : undefined}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        orientation={orientation === "vertical" ? "vertical" : "horizontal"}
+      />
+    )
+  },
+)
+Slider.displayName = "Slider"
 
 export { Slider }

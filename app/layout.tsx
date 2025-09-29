@@ -1,11 +1,16 @@
+import "@progress/kendo-theme-default/dist/all.css"
+import "./globals.css"
+
 import { ThemeProvider } from "@/components/theme-provider"
 import ConvexClientProvider from "@/components/convex-client-provider"
 import { cn } from "@/lib/utils"
+import { ensureKendoLicense } from "@/lib/kendo-license"
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server"
 import { Analytics } from "@vercel/analytics/react"
 import type { Metadata } from "next"
-import "./globals.css"
 import { GeistSans } from "geist/font/sans"
+
+ensureKendoLicense()
 
 export const metadata: Metadata = {
   title: "StudyMate",

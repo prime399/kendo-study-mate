@@ -1,11 +1,20 @@
+"use client"
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
+import {
+  Button as KendoButton,
+  type ButtonHandle,
+  type ButtonProps as KendoButtonProps,
+} from "@progress/kendo-react-buttons"
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+const placeholderButton = typeof document !== "undefined" ? document.createElement("button") : undefined
+
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "k-button inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-60 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -34,24 +43,87 @@ const buttonVariants = cva(
   }
 )
 
+type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["variant"]>
+type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>["size"]>
+
+const kendoFillMode: Record<ButtonVariant, KendoButtonProps["fillMode"] | undefined> = {
+  default: "solid",
+  destructive: "solid",
+  outline: "outline",
+  secondary: "solid",
+  ghost: "flat",
+  link: "link",
+}
+
+const kendoThemeColor: Record<ButtonVariant, KendoButtonProps["themeColor"] | undefined> = {
+  default: "primary",
+  destructive: "error",
+  outline: "base",
+  secondary: "secondary",
+  ghost: "base",
+  link: "primary",
+}
+
+const kendoSize: Record<ButtonSize, KendoButtonProps["size"] | undefined> = {
+  sm: "small",
+  default: "medium",
+  lg: "large",
+  icon: "medium",
+}
+
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "color">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button"
+  (
+    { className, variant = "default", size = "default", asChild = false, children, ...rest },
+    ref,
+  ) => {
+    const variantKey = (variant ?? "default") as ButtonVariant
+    const sizeKey = (size ?? "default") as ButtonSize
+    const composedClassName = cn(buttonVariants({ variant: variantKey, size: sizeKey }), className)
+
+    const kendoRef = React.useRef<ButtonHandle | null>(null)
+    const slotRef = React.useRef<HTMLButtonElement | null>(null)
+
+    React.useImperativeHandle(ref, () => {
+      if (asChild) {
+        return slotRef.current ?? placeholderButton!
+      }
+      return kendoRef.current?.element ?? placeholderButton!
+    })
+
+    if (asChild) {
+      return (
+        <Slot
+          {...rest}
+          className={composedClassName}
+          ref={slotRef as unknown as React.Ref<HTMLElement>}
+        >
+          {children}
+        </Slot>
+      )
+    }
+
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
-      />
+      <KendoButton
+        {...rest}
+        ref={kendoRef}
+        className={composedClassName}
+        fillMode={kendoFillMode[variantKey]}
+        themeColor={kendoThemeColor[variantKey]}
+        size={kendoSize[sizeKey]}
+        rounded="medium"
+      >
+        {children}
+      </KendoButton>
     )
-  }
+  },
 )
+
 Button.displayName = "Button"
 
 export { Button, buttonVariants }

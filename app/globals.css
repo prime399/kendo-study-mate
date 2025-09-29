@@ -214,3 +214,20 @@ to {
   @apply overflow-x-auto rounded-lg bg-muted/70 p-4 text-sm;
 }
 
+@layer base {
+  .k-textbox .k-input::placeholder,
+  .k-textarea textarea::placeholder,
+  .k-input::placeholder,
+  .k-input-inner input::placeholder {
+    color: hsl(var(--muted-foreground));
+    opacity: 0.85;
+  }
+
+  .dark .k-textbox .k-input::placeholder,
+  .dark .k-textarea textarea::placeholder,
+  .dark .k-input::placeholder,
+  .dark .k-input-inner input::placeholder {
+    color: hsl(var(--muted-foreground));
+    opacity: 0.85;
+  }
+}
