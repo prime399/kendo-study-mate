@@ -53,10 +53,10 @@ export default function AIHelperPage() {
             disabled={isLoading}
           />
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
             onClick={clearChat}
-            className="gap-2 w-full sm:w-auto"
+            className="gap-2 w-full sm:w-auto bg-white text-gray-700 border-2 border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500"
           >
             <TrashIcon className="h-4 w-4" />
             <span className="sm:inline">Clear Chat</span>

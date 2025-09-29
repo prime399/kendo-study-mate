@@ -70,13 +70,13 @@ export function ChatInput({
               hasMessages && (
                 <Button
                   type="button"
-                  variant="outline"
+                  variant="ghost"
                   size="icon"
                   onClick={(e) => {
                     e.preventDefault()
                     onReload()
                   }}
-                  className="h-9 w-9 sm:h-10 sm:w-10"
+                  className="h-9 w-9 sm:h-10 sm:w-10 bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500"
                 >
                   <RefreshCw className="h-4 w-4" />
                 </Button>
@@ -86,7 +86,8 @@ export function ChatInput({
               type="submit"
               size="icon"
               disabled={isLoading || !input.trim()}
-              className="h-9 w-9 sm:h-10 sm:w-10"
+              variant="ghost"
+              className="h-9 w-9 sm:h-10 sm:w-10 bg-white text-gray-700 border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-500"
             >
               <Send className="h-4 w-4" />
             </Button>

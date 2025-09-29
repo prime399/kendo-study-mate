@@ -55,32 +55,32 @@ const MESSAGE_CATEGORIES = [
   {
     title: "🎯 Focus & Concentration",
     messages: PREDEFINED_MESSAGES.slice(0, 3),
-    color: "border-blue-200 hover:border-blue-300",
+    color: "bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700",
   },
   {
     title: "📚 Study Techniques",
     messages: PREDEFINED_MESSAGES.slice(3, 7),
-    color: "border-green-200 hover:border-green-300",
+    color: "bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700",
   },
   {
     title: "⏰ Time Management",
     messages: PREDEFINED_MESSAGES.slice(7, 11),
-    color: "border-purple-200 hover:border-purple-300",
+    color: "bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700",
   },
   {
     title: "📊 Performance Analysis",
     messages: PREDEFINED_MESSAGES.slice(11, 15),
-    color: "border-orange-200 hover:border-orange-300",
+    color: "bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700",
   },
   {
     title: "💪 Motivation & Habits",
     messages: PREDEFINED_MESSAGES.slice(15, 19),
-    color: "border-pink-200 hover:border-pink-300",
+    color: "bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700",
   },
   {
     title: "🌱 Health & Wellness",
     messages: PREDEFINED_MESSAGES.slice(19),
-    color: "border-emerald-200 hover:border-emerald-300",
+    color: "bg-white border-2 border-gray-200 hover:border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-700",
   },
 ] as const
 
@@ -99,12 +99,12 @@ export function PredefinedMessages({ onMessageSelect, isLoading }: PredefinedMes
 
   return (
     <div className="flex h-full flex-col items-center justify-start py-4 sm:py-8 text-center px-3 sm:px-6 overflow-y-auto">
-      <div className="mb-6 sm:mb-8">
-        <Bot className="mx-auto mb-3 sm:mb-4 h-12 w-12 sm:h-16 sm:w-16 text-primary" />
-        <h3 className="mb-3 text-xl sm:text-2xl font-bold text-foreground">
+      <div className="mb-8 sm:mb-10">
+        <Bot className="mx-auto mb-4 sm:mb-6 h-12 w-12 sm:h-16 sm:w-16 text-gray-600 dark:text-gray-400" />
+        <h3 className="mb-4 text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">
           MentorMind
         </h3>
-        <p className="max-w-lg text-sm sm:text-base text-muted-foreground leading-relaxed">
+        <p className="max-w-lg text-sm sm:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
           Get personalized study advice, techniques, and insights based on your learning patterns. 
           Choose a topic below or ask me anything!
         </p>
@@ -114,15 +114,15 @@ export function PredefinedMessages({ onMessageSelect, isLoading }: PredefinedMes
         {/* Primary Categories */}
         {primaryCategories.map((category) => (
           <div key={category.title} className="space-y-3 sm:space-y-4">
-            <h4 className="text-sm sm:text-base font-semibold text-foreground text-left px-1">
+            <h4 className="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 text-left px-1">
               {category.title}
             </h4>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
               {category.messages.map((message) => (
                 <Button
                   key={message}
-                  variant="outline"
-                  className={`h-auto whitespace-normal text-left text-sm sm:text-base p-4 transition-all hover:shadow-md ${category.color} leading-relaxed min-h-[3rem] font-medium`}
+                  variant="ghost"
+                  className={`h-auto whitespace-normal text-left text-sm sm:text-base p-4 transition-all duration-200 hover:shadow-md ${category.color} leading-relaxed min-h-[3.5rem] font-medium text-gray-700 dark:text-gray-200`}
                   onClick={() => onMessageSelect(message)}
                   disabled={isLoading}
                 >
@@ -138,7 +138,7 @@ export function PredefinedMessages({ onMessageSelect, isLoading }: PredefinedMes
           <Button
             variant="ghost"
             onClick={() => setShowMore(!showMore)}
-            className="text-sm sm:text-base font-medium text-primary hover:text-primary/80 gap-2"
+            className="text-sm sm:text-base font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 gap-2 bg-gray-100 border border-gray-200 hover:bg-gray-200 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 px-6 py-2.5 transition-all duration-200"
             disabled={isLoading}
           >
             {showMore ? (
@@ -160,15 +160,15 @@ export function PredefinedMessages({ onMessageSelect, isLoading }: PredefinedMes
           <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
             {additionalCategories.map((category) => (
               <div key={category.title} className="space-y-3 sm:space-y-4">
-                <h4 className="text-sm sm:text-base font-semibold text-foreground text-left px-1">
+                <h4 className="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200 text-left px-1">
                   {category.title}
                 </h4>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {category.messages.map((message) => (
                     <Button
                       key={message}
-                      variant="outline"
-                      className={`h-auto whitespace-normal text-left text-sm sm:text-base p-4 transition-all hover:shadow-md ${category.color} leading-relaxed min-h-[3rem] font-medium`}
+                      variant="ghost"
+                      className={`h-auto whitespace-normal text-left text-sm sm:text-base p-4 transition-all duration-200 hover:shadow-md ${category.color} leading-relaxed min-h-[3.5rem] font-medium text-gray-700 dark:text-gray-200`}
                       onClick={() => onMessageSelect(message)}
                       disabled={isLoading}
                     >
@@ -182,14 +182,14 @@ export function PredefinedMessages({ onMessageSelect, isLoading }: PredefinedMes
         )}
       </div>
       
-      <div className="mt-6 sm:mt-8 space-y-3 text-center">
-        <div className="text-sm text-muted-foreground px-2 font-medium">
+      <div className="mt-8 sm:mt-10 space-y-4 text-center">
+        <div className="text-sm text-gray-600 dark:text-gray-400 px-2 font-medium">
           💡 Pro Tip: Ask specific questions for personalized recommendations
         </div>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-xs text-muted-foreground/80 px-2">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 text-xs text-gray-500 dark:text-gray-500 px-2">
           <div className="flex items-center gap-1">
             <span>Powered by</span>
-            <span className="font-semibold text-primary">Heroku Inference and Agents</span>
+            <span className="font-semibold text-gray-700 dark:text-gray-300">Heroku Inference and Agents</span>
           </div>
           <span className="hidden sm:inline">•</span>
           <span>Personalized Study Intelligence</span>
