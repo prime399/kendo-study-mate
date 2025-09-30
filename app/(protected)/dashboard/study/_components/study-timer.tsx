@@ -57,15 +57,15 @@ export default function StudyTimer({
     onReset()
   }
   return (
-    <Card className="border-2">
+    <Card className="border-2 border-border bg-card">
       <CardHeader>
-        <CardTitle className="flex items-center justify-center text-2xl">
+        <CardTitle className="flex items-center justify-center text-2xl text-card-foreground">
           <Clock className="mr-3 h-8 w-8" />
           Study Timer
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="text-center text-7xl font-bold tracking-tighter">
+        <div className="text-center text-7xl font-bold tracking-tighter text-card-foreground">
           <div className="flex items-center justify-center">
             {hours > 0 && (
               <>
@@ -78,7 +78,10 @@ export default function StudyTimer({
             <NumberFlow value={seconds} format={{ minimumIntegerDigits: 2 }} />
           </div>
         </div>
-        <Progress value={Math.min(progress, 100)} className="h-3" />
+        <Progress 
+          value={Math.min(progress, 100)} 
+          className="h-3 bg-muted/30 [&_.k-progressbar-value]:bg-primary [&_.k-progressbar-value]:rounded-full" 
+        />
         <div className="space-y-2 text-center">
           <p className="text-sm font-medium text-muted-foreground">Study type</p>
           <div className="flex justify-center">
@@ -96,27 +99,30 @@ export default function StudyTimer({
           </div>
         </div>
         <div className="flex justify-center gap-4">
-          <Button size="lg" onClick={onStartStop} className="w-32">
+          <Button 
+            size="lg" 
+            onClick={onStartStop} 
+            className="w-32 bg-white text-black hover:bg-white/90 dark:bg-white dark:text-black dark:hover:bg-white/90 border-0 !border-none shadow-none"
+          >
             {isStudying ? (
               <>
-                <Pause className="mr-2 h-4 w-4" />
-                Pause
+                <Pause className="mr-2 h-4 w-4 flex-shrink-0" />
+                <span>Pause</span>
               </>
             ) : (
               <>
-                <Play className="mr-2 h-4 w-4" />
-                Start
+                <Play className="mr-2 h-4 w-4 flex-shrink-0" />
+                <span>Start</span>
               </>
             )}
           </Button>
           <Button
             size="lg"
             onClick={handleReset}
-            variant="outline"
-            className="w-32"
+            className="w-32 bg-black text-white hover:bg-black/90 dark:bg-black dark:text-white dark:hover:bg-black/90 border-0 !border-none shadow-none"
           >
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Reset
+            <RotateCcw className="mr-2 h-4 w-4 flex-shrink-0" />
+            <span>Reset</span>
           </Button>
         </div>
       </CardContent>

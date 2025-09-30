@@ -27,11 +27,11 @@ export default function StudyStats({
   }
 
   const getProgressBadge = () => {
-    if (progress >= 100) return { label: "Complete!", color: "bg-emerald-50 text-emerald-700 border-emerald-200" }
-    if (progress >= 75) return { label: "Almost There!", color: "bg-blue-50 text-blue-700 border-blue-200" }
-    if (progress >= 50) return { label: "Halfway", color: "bg-yellow-50 text-yellow-700 border-yellow-200" }
-    if (progress >= 25) return { label: "Getting Started", color: "bg-orange-50 text-orange-700 border-orange-200" }
-    return { label: "Just Started", color: "bg-gray-50 text-gray-700 border-gray-200" }
+    if (progress >= 100) return { label: "Complete!", color: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800" }
+    if (progress >= 75) return { label: "Almost There!", color: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800" }
+    if (progress >= 50) return { label: "Halfway", color: "bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800" }
+    if (progress >= 25) return { label: "Getting Started", color: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800" }
+    return { label: "Just Started", color: "bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-900/20 dark:text-gray-300 dark:border-gray-800" }
   }
 
   const progressBadge = getProgressBadge()
@@ -41,7 +41,7 @@ export default function StudyStats({
       {/* Main Statistics Grid */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Current Session */}
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -72,7 +72,7 @@ export default function StudyStats({
         </Card>
 
         {/* Total Study Time */}
-        <Card className="relative overflow-hidden">
+        <Card className="relative overflow-hidden bg-card border-border">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="space-y-1">

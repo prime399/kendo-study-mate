@@ -65,8 +65,9 @@ const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         value={Math.min(Math.max(value, min), max)}
         animation={animation}
         className={cn(
-          "k-progressbar h-2 w-full overflow-hidden rounded-full border border-transparent bg-primary/20",
-          "[&_.k-progressbar-value]:bg-primary",
+          "k-progressbar h-2 w-full overflow-hidden rounded-full bg-secondary border border-transparent shadow-sm",
+          "[&_.k-progressbar-value]:bg-primary [&_.k-progressbar-value]:rounded-full [&_.k-progressbar-value]:transition-all [&_.k-progressbar-value]:duration-300 [&_.k-progressbar-value]:ease-out",
+          "[&_.k-progressbar-value]:shadow-sm [&_.k-progressbar-value]:relative",
           className,
         )}
       />

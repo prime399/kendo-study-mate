@@ -22,7 +22,7 @@ export default function RecentSessions({ sessions }: { sessions: any[] }) {
           {sessions.map((session) => (
             <div
               key={session._id}
-              className="flex items-center justify-between rounded-lg border p-4 transition-colors hover:bg-accent"
+              className="flex items-center justify-between rounded-lg border border-border bg-card p-4 transition-colors hover:bg-accent hover:text-accent-foreground"
             >
               <div>
                 <p className="font-medium">{formatType(session.type)} Session</p>

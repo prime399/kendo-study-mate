@@ -38,15 +38,7 @@ function StatsCard({
         {progress !== undefined && (
           <Progress
             value={progress}
-            className="mt-2"
-            style={{
-              background:
-                progress < 30
-                  ? "var(--red-100)"
-                  : progress < 70
-                    ? "var(--yellow-100)"
-                    : "var(--green-100)",
-            }}
+            className="mt-3 h-0.5 bg-white/20 [&_.k-progressbar-value]:bg-white [&_.k-progressbar-value]:!bg-white"
           />
         )}
       </CardContent>

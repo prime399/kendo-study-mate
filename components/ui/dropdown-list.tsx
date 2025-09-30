@@ -121,9 +121,12 @@ const DropdownList = React.forwardRef<HTMLDivElement, DropdownListProps>(
         onBlur={handleBlur}
         filterable={filterable}
         className={cn(
-          "k-dropdownlist w-full [&_.k-input-inner]:px-3 [&_.k-input-inner]:py-2 [&_.k-input-inner]:text-sm",
-          "rounded-md border border-input bg-transparent text-foreground shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
-          "disabled:pointer-events-none disabled:opacity-50",
+          "k-dropdownlist w-full h-11 rounded-md border border-input bg-background shadow-sm ring-offset-background transition-all duration-200",
+          "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 hover:border-input/80",
+          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "[&_.k-input-inner]:h-full [&_.k-input-inner]:px-4 [&_.k-input-inner]:py-2 [&_.k-input-inner]:text-sm [&_.k-input-inner]:bg-transparent [&_.k-input-inner]:border-none",
+          "[&_.k-input-inner_input]:bg-transparent [&_.k-input-inner_input]:placeholder:text-muted-foreground",
+          "[&_.k-button]:h-9 [&_.k-button]:w-9 [&_.k-button]:border-none [&_.k-button]:bg-transparent [&_.k-button]:text-muted-foreground [&_.k-button]:hover:bg-accent [&_.k-button]:hover:text-accent-foreground [&_.k-button]:rounded-sm [&_.k-button]:transition-colors",
           className,
         )}
       />

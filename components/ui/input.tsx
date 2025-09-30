@@ -82,7 +82,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         onFocus={handleFocus}
         onBlur={handleBlur}
         className={cn(
-          "k-textbox flex h-9 w-full items-center rounded-md border border-input bg-transparent px-3 text-base shadow-sm transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background disabled:pointer-events-none disabled:opacity-50 md:text-sm",
+          "k-textbox flex h-11 w-full items-center rounded-md border border-input bg-background px-4 py-2 text-sm shadow-sm ring-offset-background transition-all duration-200 focus-within:border-ring focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 hover:border-input/80 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "[&_.k-input]:bg-transparent [&_.k-input]:border-none [&_.k-input]:shadow-none [&_.k-input]:h-full [&_.k-input]:text-sm [&_.k-input]:placeholder:text-muted-foreground",
           className,
         )}
         inputAttributes={{ className: "placeholder:text-muted-foreground" }}

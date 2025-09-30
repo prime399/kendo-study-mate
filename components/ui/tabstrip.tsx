@@ -54,16 +54,18 @@ const TabStrip = React.forwardRef<HTMLDivElement, TabStripProps>(
           selected={selectedIndex}
           onSelect={handleSelect}
           className={cn(
-            "k-tabstrip k-tabstrip-top rounded-xl border border-input bg-muted/40 p-2",
-            "[&_.k-tabstrip-items]:gap-2 [&_.k-tabstrip-items]:rounded-lg",
-            "[&_.k-item]:rounded-md [&_.k-item]:border-0 [&_.k-item]:px-4 [&_.k-item]:py-2",
-            "[&_.k-link]:text-sm [&_.k-link]:font-medium",
-            "[&_.k-state-active_.k-link]:bg-background [&_.k-state-active_.k-link]:text-foreground [&_.k-state-active_.k-link]:shadow",
+            "k-tabstrip k-tabstrip-top rounded-lg border border-input bg-muted/30 p-1",
+            "[&_.k-tabstrip-items]:gap-1 [&_.k-tabstrip-items]:rounded-md [&_.k-tabstrip-items]:p-1",
+            "[&_.k-item]:rounded-md [&_.k-item]:border-0 [&_.k-item]:px-3 [&_.k-item]:py-2 [&_.k-item]:transition-all [&_.k-item]:duration-200",
+            "[&_.k-link]:text-sm [&_.k-link]:font-medium [&_.k-link]:text-muted-foreground [&_.k-link]:transition-colors [&_.k-link]:duration-200",
+            "[&_.k-item:hover_.k-link]:text-foreground [&_.k-item:hover]:bg-background/50",
+            "[&_.k-state-active_.k-link]:bg-background [&_.k-state-active_.k-link]:text-foreground [&_.k-state-active_.k-link]:shadow-sm [&_.k-state-active_.k-link]:font-semibold",
+            "[&_.k-state-active]:bg-background [&_.k-state-active]:shadow-sm",
           )}
         >
           {items.map((item) => (
             <TabStripTab key={item.key} title={item.title} disabled={item.disabled}>
-              <div className="mt-6">
+              <div className="mt-4 p-4 bg-background rounded-md border border-border/50 shadow-sm">
                 {keepMount || item.key === value ? item.content : null}
               </div>
             </TabStripTab>

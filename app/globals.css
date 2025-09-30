@@ -215,6 +215,9 @@ to {
 }
 
 @layer base {
+  /* Kendo UI Component Overrides for Modern Design */
+  
+  /* Input placeholders */
   .k-textbox .k-input::placeholder,
   .k-textarea textarea::placeholder,
   .k-input::placeholder,
@@ -229,5 +232,177 @@ to {
   .dark .k-input-inner input::placeholder {
     color: hsl(var(--muted-foreground));
     opacity: 0.85;
+  }
+
+  /* Dropdown and Popup styling */
+  .k-popup,
+  .k-animation-container {
+    @apply rounded-md border border-border bg-popover shadow-lg z-50;
+  }
+
+  .k-list {
+    @apply bg-transparent p-1;
+  }
+
+  .k-list-item {
+    @apply rounded-sm px-2 py-1.5 text-sm cursor-pointer transition-colors;
+    @apply hover:bg-accent hover:text-accent-foreground;
+    @apply focus:bg-accent focus:text-accent-foreground;
+    @apply data-[selected]:bg-accent data-[selected]:text-accent-foreground;
+  }
+
+  .k-list-item.k-selected {
+    @apply bg-accent text-accent-foreground font-medium;
+  }
+
+  .k-list-item.k-state-disabled {
+    @apply text-muted-foreground opacity-50 cursor-not-allowed;
+  }
+
+  /* Calendar popup styling */
+  .k-calendar {
+    @apply bg-popover border-0 shadow-none;
+  }
+
+  .k-calendar .k-header {
+    @apply bg-muted/30 border-b border-border rounded-t-md;
+  }
+
+  .k-calendar .k-nav-today,
+  .k-calendar .k-nav-prev,
+  .k-calendar .k-nav-next {
+    @apply text-muted-foreground hover:text-foreground hover:bg-accent rounded-sm transition-colors;
+  }
+
+  .k-calendar .k-content {
+    @apply p-3;
+  }
+
+  .k-calendar td {
+    @apply hover:bg-accent hover:text-accent-foreground rounded-sm transition-colors;
+  }
+
+  .k-calendar .k-selected {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .k-calendar .k-today {
+    @apply font-semibold text-primary;
+  }
+
+  /* Button overrides for consistent styling */
+  .k-button {
+    @apply transition-all duration-200;
+  }
+
+  .k-button:not(.k-flat):not(.k-outline) {
+    @apply shadow-sm;
+  }
+
+  .k-button.k-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .k-button.k-outline {
+    @apply border-input bg-background hover:bg-accent hover:text-accent-foreground;
+  }
+
+  .k-button.k-flat {
+    @apply bg-transparent hover:bg-accent hover:text-accent-foreground;
+  }
+
+  /* Progress bar enhancements */
+  .k-progressbar {
+    @apply relative overflow-hidden;
+  }
+
+  /* Focus states */
+  .k-textbox:focus-within,
+  .k-numerictextbox:focus-within,
+  .k-datepicker:focus-within,
+  .k-dropdownlist:focus-within,
+  .k-textarea:focus-within {
+    @apply outline-none;
+  }
+
+  /* Disabled states */
+  .k-textbox.k-disabled,
+  .k-numerictextbox.k-disabled,
+  .k-datepicker.k-disabled,
+  .k-dropdownlist.k-disabled,
+  .k-textarea.k-disabled {
+    @apply opacity-50 cursor-not-allowed bg-muted;
+  }
+
+  /* Remove default Kendo borders and backgrounds */
+  .k-textbox .k-textbox-container,
+  .k-numerictextbox .k-numeric-wrap,
+  .k-datepicker .k-picker-wrap,
+  .k-dropdownlist .k-dropdown-wrap {
+    @apply border-0 bg-transparent shadow-none;
+  }
+
+  /* Icon styling in inputs */
+  .k-input-button .k-button-icon,
+  .k-picker-wrap .k-input-button .k-icon {
+    @apply text-muted-foreground;
+  }
+
+  /* Animation overrides */
+  .k-animation-container-shown {
+    @apply animate-in fade-in-0 zoom-in-95 duration-200;
+  }
+
+  .k-animation-container-hidden {
+    @apply animate-out fade-out-0 zoom-out-95 duration-150;
+  }
+
+  /* White progress bar override for dashboard */
+  .k-progressbar.bg-white\/20 {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+  }
+
+  .k-progressbar.bg-white\/20 .k-progressbar-value {
+    background-color: white !important;
+  }
+
+  /* Remove borders from study timer buttons */
+  .k-button.bg-white,
+  .k-button.bg-black {
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure text visibility on white/black backgrounds */
+  .bg-white {
+    @apply text-black;
+  }
+
+  .bg-black {
+    @apply text-white;
+  }
+
+  /* Specific button text visibility fixes */
+  button.bg-white,
+  .k-button.bg-white,
+  [role="button"].bg-white {
+    color: rgb(0 0 0) !important;
+  }
+
+  button.bg-black,
+  .k-button.bg-black,
+  [role="button"].bg-black {
+    color: rgb(255 255 255) !important;
+  }
+
+  /* Hover states for white/black buttons */
+  button.bg-white:hover,
+  .k-button.bg-white:hover {
+    @apply bg-white/90 text-black;
+  }
+
+  button.bg-black:hover,
+  .k-button.bg-black:hover {
+    @apply bg-black/90 text-white;
   }
 }

@@ -103,9 +103,13 @@ const NumericInput = React.forwardRef<HTMLInputElement, NumericInputProps>(
         onFocus={handleFocus}
         onBlur={handleBlur}
         className={cn(
-          "k-numerictextbox w-full [&_.k-input]:px-3 [&_.k-input]:py-2 [&_.k-input]:text-base [&_.k-input]:md:text-sm",
-          "rounded-md border border-input bg-transparent text-foreground shadow-sm focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
-          "disabled:pointer-events-none disabled:opacity-50",
+          "k-numerictextbox w-full h-11 rounded-md border border-input bg-background shadow-sm ring-offset-background transition-all duration-200",
+          "focus-within:border-ring focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 hover:border-input/80",
+          "disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "[&_.k-input]:h-full [&_.k-input]:px-4 [&_.k-input]:py-2 [&_.k-input]:text-sm [&_.k-input]:bg-transparent [&_.k-input]:border-none",
+          "[&_.k-input_input]:bg-transparent [&_.k-input_input]:placeholder:text-muted-foreground",
+          "[&_.k-button]:h-7 [&_.k-button]:w-7 [&_.k-button]:border-none [&_.k-button]:bg-transparent [&_.k-button]:text-muted-foreground [&_.k-button]:hover:bg-accent [&_.k-button]:hover:text-accent-foreground [&_.k-button]:rounded-sm [&_.k-button]:transition-colors",
+          "[&_.k-button-group]:flex-col [&_.k-button-group]:gap-0.5 [&_.k-button-group]:mr-1",
           className,
         )}
       />

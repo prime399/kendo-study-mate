@@ -67,7 +67,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         onFocus={handleFocus}
         onBlur={handleBlur}
         className={cn(
-          "k-textarea flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background placeholder:text-muted-foreground disabled:pointer-events-none disabled:opacity-50 md:text-sm",
+          "k-textarea flex min-h-[120px] w-full rounded-md border border-input bg-background px-4 py-3 text-sm shadow-sm ring-offset-background transition-all duration-200 focus-within:border-ring focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 hover:border-input/80 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
+          "[&_textarea]:bg-transparent [&_textarea]:border-none [&_textarea]:shadow-none [&_textarea]:resize-none [&_textarea]:placeholder:text-muted-foreground [&_textarea]:text-sm [&_textarea]:leading-relaxed",
           className,
         )}
       />
